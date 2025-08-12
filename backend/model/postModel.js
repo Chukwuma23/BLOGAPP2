@@ -2,13 +2,21 @@
 import mongoose from 'mongoose';
 
 const postSchema = new mongoose.Schema({
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: true,
-    },
-  image: {
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
+  coverImage: {  // matches frontend's 'cover'
     type: String,
+  },
+  images: {      // change from 'image' to 'images' array
+    type: [String],
+    default: []
+  },
+  videos: {
+    type: [String],
+    default: []
   },
   title: {
     type: String,
@@ -26,7 +34,7 @@ const postSchema = new mongoose.Schema({
     type: String,
     default: 'general',
   },
-  content: {
+  content: {     // frontend sends 'value' which should map to this
     type: String,
     required: true,
   },
@@ -38,8 +46,6 @@ const postSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-}, { timestamps: true },
-);
-
+}, { timestamps: true });
 
 export default mongoose.model('Post', postSchema);

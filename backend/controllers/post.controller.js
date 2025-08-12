@@ -9,8 +9,20 @@ dotenv.config();
 
 export const getPosts = async (req, res) => {
   try {
-    const posts = await Post.find();
-    res.status(200).json(posts);
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 2;
+   // const skip = (page - 1) * limit;
+
+    // Fetch posts with pagination
+    const posts = await Post.find()
+    .skip((page - 1) * limit)
+    .limit(limit);
+    // Fetch total post count
+    const totalPosts = await Post.countDocuments();
+    //
+    const hasMore = page * limit < totalPosts;
+    res.status(200).json({ posts, hasMore });
   } catch (error) {
     res.status(500).json({ message: 'Error fetching posts' });
   }
@@ -54,25 +66,44 @@ export const createPost = async (req, res) => {
     // 1. Authentication check
     const clerkUserId = req.auth().userId;
     if (!clerkUserId) {
-      return res.status(401).json({ message: 'Not authorized' });
+      return res.status(401).json({ 
+        success: false,
+        message: 'Not authorized' 
+      });
     }
 
     // 2. Find user in database
     const user = await User.findOne({ clerkUserId });
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ 
+        success: false,
+        message: 'User not found' 
+      });
     }
 
     // 3. Validate required fields
-    const { title, content } = req.body;
+    const { 
+      title, 
+      content,  // Changed from 'value' to 'content'
+      coverImage, // Changed from 'cover'
+      images,    // Changed from 'img' (now accepts array)
+      videos,
+      desc = '',
+      category = 'general',
+      isFeatured = false
+    } = req.body;
+
+    // Enhanced validation
+    const errors = {};
+    if (!title?.trim()) errors.title = 'Title is required';
+    if (!content?.trim()) errors.content = 'Content is required';
+    if (title?.length > 120) errors.title = 'Title must be less than 120 characters';
     
-    if (!title?.trim() || !content?.trim()) {
+    if (Object.keys(errors).length > 0) {
       return res.status(400).json({
+        success: false,
         message: 'Validation failed',
-        errors: {
-          ...(!title?.trim() && { title: 'Title is required' }),
-          ...(!content?.trim() && { content: 'Content is required' })
-        }
+        errors
       });
     }
 
@@ -84,8 +115,8 @@ export const createPost = async (req, res) => {
     });
 
     // Check for existing slugs and make unique if needed
-    const existingPost = await Post.findOne({ slug });
-    if (existingPost) {
+    const slugExists = await Post.exists({ slug });
+    if (slugExists) {
       const randomSuffix = Math.floor(Math.random() * 10000);
       slug = `${slug}-${randomSuffix}`;
     }
@@ -96,10 +127,12 @@ export const createPost = async (req, res) => {
       title: title.trim(),
       slug,
       content: content.trim(),
-      desc: req.body.desc?.trim() || '', // Optional field
-      category: req.body.category || 'general',
-      image: req.body.image || null,
-      isFeatured: req.body.isFeatured || false
+      desc: desc.trim(),
+      category,
+      coverImage,
+      images: Array.isArray(images) ? images : images ? [images] : [],
+      videos: Array.isArray(videos) ? videos : videos ? [videos] : [],
+      isFeatured
     });
 
     const savedPost = await newPost.save();
@@ -108,7 +141,13 @@ export const createPost = async (req, res) => {
     res.status(201).json({
       success: true,
       message: 'Post created successfully',
-      post: savedPost
+      post: {
+        id: savedPost._id,
+        title: savedPost.title,
+        slug: savedPost.slug,
+        coverImage: savedPost.coverImage,
+        createdAt: savedPost.createdAt
+      }
     });
 
   } catch (error) {
@@ -141,10 +180,13 @@ export const createPost = async (req, res) => {
     res.status(500).json({ 
       success: false,
       message: 'Server error creating post',
-      error: error.message 
+      error: process.env.NODE_ENV === 'development' ? error.message : 'Internal server error'
     });
   }
 };
+   
+
+    
 
 export const deletePost = async (req, res) => {
   try {
