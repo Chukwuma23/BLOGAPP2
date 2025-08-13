@@ -1,7 +1,8 @@
 // Import Image component from ImageKit for optimized image handling
 import { Image } from "@imagekit/react";
 // Import Link component for client-side navigation
-import { Link } from "react-router-dom";
+import { Link} from "react-router-dom";
+import { format } from "timeago.js";
 
 /**
  * PostListItems Component
@@ -21,11 +22,11 @@ const PostListItems = ({ post }) => {
     // Early return if no post data is provided
     if (!post) return null;
     
-    /**
+    /*
      * Formats a date string into a readable format (e.g., "Jun 15, 2023")
      * @param {string} dateString - ISO date string from the database
      * @returns {string} Formatted date
-     */
+    
     const formatDate = (dateString) => {
         const date = new Date(dateString);
         return date.toLocaleDateString('en-US', {
@@ -33,7 +34,7 @@ const PostListItems = ({ post }) => {
             month: 'short',  // Abbreviated month (Jun)
             day: 'numeric'   // Day of month (15)
         });
-    };
+    }; */
 
     return (
         // Main container with responsive flex layout
@@ -66,16 +67,20 @@ const PostListItems = ({ post }) => {
                 </Link>
                 
                 {/* Post Metadata Row */}
-                <div className="flex items-center gap-6 text-gray-400 text-sm">
-                    <span>Category:</span>
+                <div className="flex items-center gap-2 text-gray-400 text-sm">
+                     <span>written by:</span>
+                     <Link className="text-blue-800 hover:underline">
+                        {post.user.username}
+                    </Link>
                     {/* Category link - TODO: Link to category page */}
+                     <span>Cat:</span>
                     <Link className="text-blue-800 hover:underline">
                         {post.category || 'Uncategorized'}
                     </Link>
-                    <span>Posted:</span>
+                    <span>Posted: </span>
                     {/* Formatted publication date */}
                     <span className="text-blue-800">
-                        {formatDate(post.createdAt)}
+                        {format(post.createdAt)}
                     </span>
                 </div>
                 

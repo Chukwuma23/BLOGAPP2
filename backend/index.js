@@ -44,7 +44,7 @@ app.get('/protected2', requireAuth(), (req, res) => {
 
 // Middleware to handle CORS
 app.use('/users', userRoute);
-app.use("/comment", commentRoute); // Assuming commentRoute.js is similar to userRoute.js
+app.use("/comments", commentRoute); // Assuming commentRoute.js is similar to userRoute.js
 app.use("/posts", postsRoute); // Assuming postRoute.js is similar to userRoute.js
 app.use((error, req, res, next) => {
   res.json({

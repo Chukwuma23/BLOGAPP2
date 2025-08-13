@@ -1,108 +1,98 @@
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Image } from '@imagekit/react';
 import PostMenuAction from "../components/PostMenuAction";
 import Search from "../components/Search";
 import Comments from "../components/Comments";
+import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
+import { format } from "timeago.js";
+
+
+const fetchPost = async (slug) => {
+  // Use 'page' instead of 'cursor' to match backend
+  const res = await axios.get(`${import.meta.env.VITE_API_URL}/posts/${slug}`)
+  return res.data;
+};
+
+
 const SinglePostPage = () => {
+ /*
+     * Formats a date string into a readable format (e.g., "Jun 15, 2023")
+     * @param {string} dateString - ISO date string from the database
+     * @returns {string} Formatted date
+   
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', {
+            year: 'numeric',  // Show full year (2023)
+            month: 'short',  // Abbreviated month (Jun)
+            day: 'numeric'   // Day of month (15)
+        });
+    };  */
+
+
+
+const {slug} = useParams();
+
+ const {isPending, error, data} = useQuery({
+        queryKey: ["post", slug],
+        queryFn: () => fetchPost(slug),
+    })
+
+      if (isPending) return 'Loading...';
+      if (error) return 'An error has occurred: ' + error.message;
+      if (!data) return 'Post not found!';
+
     return(
         <div className="flex flex-col gap-8">
              {/* DATAILS */}
             <div  className="flex gap-8 ">
                 <div  className="lg:w-3/5 flex flex-col gap-8">
                  <h1 className="text-xl md:text-3xl xl:text-4xl 2xl:text-5xl font-semibold">
-                    this is just a single post heading and is special in my heart
+                    {data.title}
                     </h1> 
                     <div className="flex items-center gap-4 text-gray-400 text-md">
                         <span>Written by:</span>
-                <Link className="text-blue-800 ">Chima kalu</Link>
+                <Link className="text-blue-800 ">{data.user.username} </Link>
                 <span>On:</span>
-                <Link className="text-blue-800 ">Wed design</Link>
-                 <span>2 days ago</span>
+                <Link className="text-blue-800 ">{data.category} </Link>
+                 <span>{format(data.createdAt)}</span>
                         </div>  
-                        <p className="text-gray-500 font-medium">this is just a single post heading and is special in my heart.
-                            this is just a single post heading and is special in my heart
-                            this is just a single post heading and is special in my heart
-                        </p>
+                        <p className="text-gray-500 font-medium">{data.desc} </p>
                 </div> 
-                <div className="hidden lg:block w-2/3">
-                     <Image 
+               {data.img && <div  className="hidden lg:block w-2/3">
+                <Image 
                                         urlEndpoint={import.meta.env.VITE_IMAGEKIT_URL_ENDPOINT}
-                                        src='/featured3.jpeg'
+                                        src={data.img}
                                         w="600"
                                         h="200"
                                         className="rounded-2xl" 
                                         alt="logo" 
                                     />
-                </div>
+                </div>}
                 </div> 
                   {/* CONTENT */}
             <div className="flex flex-col md:flex-row gap-8">
               <div className="lg:text-lg flex flex-col gap-6 text-justify">
-                 <p className="text-gray-500 font-medium">this is just a single post heading and is special in my heart.
-                            this is just a single post heading and is special in my heart
-                            this is just a single post heading and is special in my heart
-                        </p>
-                         <p className="text-gray-500 font-medium">this is just a single post heading and is special in my heart.
-                            this is just a single post heading and is special in my heart
-                            this is just a single post heading and is special in my heart
-                        </p>
-                         <p className="text-gray-500 font-medium">this is just a single post heading and is special in my heart.
-                            this is just a single post heading and is special in my heart
-                            this is just a single post heading and is special in my heart
-                        </p>
-                         <p className="text-gray-500 font-medium">this is just a single post heading and is special in my heart.
-                            this is just a single post heading and is special in my heart
-                            this is just a single post heading and is special in my heart
-                        </p>
-
-                          <p className="text-gray-500 font-medium">this is just a single post heading and is special in my heart.
-                            this is just a single post heading and is special in my heart
-                            this is just a single post heading and is special in my heart
-                        </p>
-                         <p className="text-gray-500 font-medium">this is just a single post heading and is special in my heart.
-                            this is just a single post heading and is special in my heart
-                            this is just a single post heading and is special in my heart
-                        </p>
-                         <p className="text-gray-500 font-medium">this is just a single post heading and is special in my heart.
-                            this is just a single post heading and is special in my heart
-                            this is just a single post heading and is special in my heart
-                        </p>
-                         <p className="text-gray-500 font-medium">this is just a single post heading and is special in my heart.
-                            this is just a single post heading and is special in my heart
-                            this is just a single post heading and is special in my heart
-                        </p>
-                          <p className="text-gray-500 font-medium">this is just a single post heading and is special in my heart.
-                            this is just a single post heading and is special in my heart
-                            this is just a single post heading and is special in my heart
-                        </p>
-                         <p className="text-gray-500 font-medium">this is just a single post heading and is special in my heart.
-                            this is just a single post heading and is special in my heart
-                            this is just a single post heading and is special in my heart
-                        </p>
-                         <p className="text-gray-500 font-medium">this is just a single post heading and is special in my heart.
-                            this is just a single post heading and is special in my heart
-                            this is just a single post heading and is special in my heart
-                        </p>
-                         <p className="text-gray-500 font-medium">this is just a single post heading and is special in my heart.
-                            this is just a single post heading and is special in my heart
-                            this is just a single post heading and is special in my heart
-                        </p>
+                 <p className="text-gray-500 font-medium">
+                    { data.content.replace(/<[^>]*>/g, '').substring(0, 200)}...
+                   </p>
                 </div>
                   {/* menu */}
                   <div className=" px-4  h-max sticky top-8 ">
                     <h1 className=" mb-4 text-sm font-medium">Auther</h1>
                     <div className="flex flex-col gap-4">
                     <div className="flex items-center gap-4">
-                          <Image 
+                         {data.user.img &&   <Image 
                                         urlEndpoint={import.meta.env.VITE_IMAGEKIT_URL_ENDPOINT}
-                                        src='/featured4.jpeg'
+                                        src={data.img}
                                         w="48"
                                         h="48"
                                         className=" w-12
                                         h-12 rounded-full object-cover" 
                                         alt="logo" 
-                                    />
-                                    <Link>Chima kalu</Link>
+                                    />}
+                                    <Link className="text-blue-800">{data.user.username}</Link>
                              </div>
 
                                     <p className=" text-sm text-500">This is just a text for the auther page</p>
@@ -144,7 +134,7 @@ const SinglePostPage = () => {
                        <Search />
                   </div>
              </div>
-              <Comments />  
+              <Comments postId={data._id}/>  
         </div>
     )
 }

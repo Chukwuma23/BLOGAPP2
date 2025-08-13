@@ -16,6 +16,7 @@ export const getPosts = async (req, res) => {
 
     // Fetch posts with pagination
     const posts = await Post.find()
+    .populate('user', 'username')
     .skip((page - 1) * limit)
     .limit(limit);
     // Fetch total post count
@@ -30,7 +31,7 @@ export const getPosts = async (req, res) => {
 
 export const getPost = async (req, res) => {
   try {
-    const post = await Post.findOne({ slug: req.params.slug });
+    const post = await Post.findOne({ slug: req.params.slug }).populate("user", "username img");
     console.log('Database result:', post);
     res.status(200).json(post);
   } catch (error) {
