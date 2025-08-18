@@ -119,11 +119,11 @@ const {slug} = useParams();
                                 </Link>
                                 </div>
                         </div>
-                        <PostMenuAction />
+                        <PostMenuAction post={data}/>
                         <h1 className="mt-2 mb-4 text-sm font-medium">Category</h1>
                        <div className="flex flex-col gap-1 text-md">
                          <Link className="underline">All</Link>
-                          <Link className="underline" to="/">Web Design</Link>
+                          <Link className="underline" to={`/posts?cat=${post}`}>Web Design</Link>
                           <Link className="underline" to="/">Development</Link>
                           <Link className="underline" to="/">Database</Link>
                           <Link className="underline" to="/">Marketing</Link>

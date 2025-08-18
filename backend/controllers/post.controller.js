@@ -3,6 +3,7 @@ import User from '../model/userModel.js';
 import slugify from 'slugify';
 import ImageKit from 'imagekit';
 import dotenv from 'dotenv';
+import { Admin } from 'mongodb';
 dotenv.config();
 
 
@@ -11,20 +12,77 @@ export const getPosts = async (req, res) => {
   try {
 
     const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 2;
+    const limit = parseInt(req.query.limit) || 10;
+    let sortObj = { createdAt: -1 }; // Default sorting
    // const skip = (page - 1) * limit;
 
+   const query = {};
+
+   const cat = req.query.cat;
+   const author = req.query.author;
+   const searchQuery = req.query.search;
+   const sortQuery = req.query.sort;
+   const featured = req.query.featured;
+
+    if (cat) {
+      query.category = cat;
+    }
+
+      if (searchQuery) {
+      query.title = { $regex: searchQuery, $options: "i" };
+      }
+
+    if (author) {
+      const user = await User.findOne({username: author}).select("_id");
+
+      if (!user) {
+      return res.status(404).json("No post found");
+    }
+    query.user = user._id;
+    }
+    
+
+    if (sortQuery) {
+      let sortObj = {}; // Initialize sortObj
+      switch (sortQuery) {
+        case "newest":
+          sortObj = {createdAt : -1}
+
+        break;
+        case "oldest":
+          sortObj = {createdAt : 1}
+
+        break;
+        case "popular":
+          sortObj = {visit : -1}
+
+        break;
+        case "trending":
+          sortObj = {visit : -1}
+          query.createdAt = {
+            $gte: new Date( new Date().getTime() - 7 * 24 * 60 * 60 * 1000),
+          }
+        break;
+
+        default:
+          break;
+      }
+    }
+
     // Fetch posts with pagination
-    const posts = await Post.find()
+    const posts = await Post.find(query)
     .populate('user', 'username')
+    .sort(sortObj)
     .skip((page - 1) * limit)
     .limit(limit);
     // Fetch total post count
     const totalPosts = await Post.countDocuments();
-    //
+
+    //Count with the same filters
     const hasMore = page * limit < totalPosts;
     res.status(200).json({ posts, hasMore });
   } catch (error) {
+     console.error('Error in getPosts:', error); 
     res.status(500).json({ message: 'Error fetching posts' });
   }
 };
@@ -195,6 +253,12 @@ export const deletePost = async (req, res) => {
     if (!clerkUserId) {
       return res.status(401).json({ message: 'Not authorized' });
     }
+    const role = req.auth().sessionClaims?.metadata?.role || "user";
+    if(role === "admin") {
+    await Post.findByIdAndDelete(req.params.id);
+    return res.status(200).json({ message: 'Post deleted successfully' });
+    }
+
     const user = await User.findOne({ clerkUserId });
     if (!user) {
       return res.status(401).json({ message: 'User not found' });
@@ -209,6 +273,48 @@ export const deletePost = async (req, res) => {
     res.status(500).json({ message: 'Error deleting post' });
   }
 };
+
+
+
+export const featurePost = async (req, res) => {
+  try {
+    const clerkUserId = req.auth().userId;
+    if (!clerkUserId) {
+      return res.status(401).json({ message: 'Not authorized' });
+    }
+    
+    const role = req.auth().sessionClaims?.metadata?.role || "user";
+    if (role !== "admin") {
+      return res.status(403).json({ message: 'Only admins can feature posts' });
+    }
+
+    const postId = req.body.postId; // Make sure this matches what your frontend sends
+    if (!postId) {
+      return res.status(400).json({ message: 'Post ID is required' });
+    }
+
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).json({ message: 'Post not found' });
+    }
+
+    const updatedPost = await Post.findByIdAndUpdate(
+      postId,
+      { isFeatured: !post.isFeatured },
+      { new: true }
+    );
+
+    return res.status(200).json({ 
+      message: `Post ${updatedPost.isFeatured ? 'featured' : 'unfeatured'} successfully`,
+      post: updatedPost 
+    });
+    
+  } catch (error) {
+    console.error('Error featuring post:', error);
+    res.status(500).json({ message: 'Error featuring post' });
+  }
+};
+
 
 
 const imagekit = new ImageKit({

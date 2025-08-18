@@ -13,6 +13,8 @@ const app = express();
 app.use(cors({
   origin: process.env.CLIENT_URL,
   credentials: true,
+   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 })); // Enable CORS
 app.use(clerkMiddleware()); // Middleware for Clerk authentication
 app.use('/webhook', webhookRoute); // Assuming webhookRoute.js is the route for handling webhooks
@@ -65,8 +67,8 @@ app.use(function (req, res, next) {
 //});
 
 //console.log(process.env.test); // This will log the value of the 'test' variable from .env file
-app.listen(3000, () => {
+app.listen(2345, () => {
   connectDB(); // Connect to MongoDB
   console.log('Connected to MongoDB');
-  console.log('Server is running on port 3000');
+  console.log('Server is running on port 2345      ');
 });
