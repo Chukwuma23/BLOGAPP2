@@ -13,7 +13,7 @@ export const getPosts = async (req, res) => {
 
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
-    let sortObj = { createdAt: -1 }; // Default sorting
+   // let sortObj = { createdAt: -1 }; // Default sorting
    // const skip = (page - 1) * limit;
 
    const query = {};
@@ -41,34 +41,33 @@ export const getPosts = async (req, res) => {
     query.user = user._id;
     }
     
+ let sortObj = { createdAt: -1}; // Initialize sortObj
+ if (sortQuery) {
+  switch (sortQuery) {
+    case "newest":
+      sortObj = { createdAt: -1 };
+      break;  // Added missing break
+    case "oldest":
+      sortObj = { createdAt: 1 };
+      break;
+    case "popular":
+      sortObj = { visit: -1 };
+      break;
+    case "trending":
+      sortObj = { visit: -1 };
+      query.createdAt = {
+        $gte: new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000),
+      };
+      break;
+    default:
+      sortObj = { createdAt: -1 };  // Default sorting
+      break;
+  }
+}
 
-    if (sortQuery) {
-      let sortObj = {}; // Initialize sortObj
-      switch (sortQuery) {
-        case "newest":
-          sortObj = {createdAt : -1}
-
-        break;
-        case "oldest":
-          sortObj = {createdAt : 1}
-
-        break;
-        case "popular":
-          sortObj = {visit : -1}
-
-        break;
-        case "trending":
-          sortObj = {visit : -1}
-          query.createdAt = {
-            $gte: new Date( new Date().getTime() - 7 * 24 * 60 * 60 * 1000),
-          }
-        break;
-
-        default:
-          break;
-      }
-    }
-
+if (featured) {
+  query.isFeatured = true;
+}
     // Fetch posts with pagination
     const posts = await Post.find(query)
     .populate('user', 'username')

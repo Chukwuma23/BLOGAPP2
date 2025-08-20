@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import '../index.css';
 import Categories from "../components/Categories";
-import FeaturedPost from "../components/featuredPost";
+import FeaturedPost from "../components/FeaturedPost";
 import PostList from "../components/PostList";
 
 const HomePage = () => {

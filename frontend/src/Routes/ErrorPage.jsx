@@ -1,6 +1,8 @@
 const ErrorPage = () => {
     return(
-        <div className=""> AN ERROR OCCURED!</div>
+        <div className=""> AN ERROR OCCURED!
+        <p>Check you internet connections and try again!</p>
+        </div>
     )
 }
 

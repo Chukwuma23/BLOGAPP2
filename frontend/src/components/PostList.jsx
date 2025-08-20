@@ -36,11 +36,11 @@ const [ searchParams, setSearchParams ] = useSearchParams();
     getNextPageParam: (lastPage, pages) =>
       lastPage.hasMore ? pages.length : undefined,
   });
-console.log('PostList data:', data);
+//console.log('PostList data:', data);
 
   if (status === 'loading') return 'Loading...'
 
-  if (status === 'error') return 'An error has occurred: ' + error.message
+  if (status === 'error') return 'An error has occurred ' + error.message
 
   const allPosts = data?.pages.flatMap((page) => page.posts) || [];
   // Filter out duplicate posts by _id

@@ -41,11 +41,11 @@ const PostListItems = ({ post }) => {
         <div className="flex flex-col xl:flex-row gap-8 md:gap-12 items-center justify-center mb-8">
             {/* Post Image Section - Only visible on xl screens and hidden on medium */}
             {post.coverImage && (
-                <div className="md:hidden xl:block relative items-center justify-center">
+                <div className="md:hidden w-full xl:block relative items-center justify-center right-10 left-10 relative">
                     <Image
                         urlEndpoint={import.meta.env.VITE_IMAGEKIT_URL_ENDPOINT}
                         src={post.coverImage}
-                        className="rounded-2xl object-cover w-full max-w-md"
+                        className="rounded-2xl object-cover w-5/6 md:w-4/6 max-w-md"
                         alt={post.title}
                         transformation={[{
                             height: 300,   // Set image height
@@ -61,7 +61,7 @@ const PostListItems = ({ post }) => {
                 {/* Post Title - Links to full post */}
                 <Link 
                     to={`/${post.slug}`} 
-                    className="text-2xl font-semibold hover:text-blue-600"
+                    className="text-2xl font-semibold hover:text-blue-600 right-40 left-20 relative"
                 >
                     {post.title}
                 </Link>

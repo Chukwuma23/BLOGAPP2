@@ -25,7 +25,7 @@ const PostMenuAction = ({post}) => {
     const isAdmin = user?.publicMetadata?.role === "admin" || false;
 
   const isSaved = Array.isArray(savedPosts) 
-    ? savedPosts.some((p) => p.toString() === post._id.toString())
+    ? savedPosts.some((p) => p?.toString() === post._id?.toString())
     : false;
 
   const deleteMutation = useMutation({
@@ -141,7 +141,7 @@ const queryClient = useQueryClient();
         </div>
       )}
 
-      {user && (post.user.username === user.username || isAdmin) && (
+      {user && (post.user?.username === user.username || isAdmin) && (
         <div className="flex items-center gap-2 py-2 text-sm cursor-pointer"
           onClick={handleDelete}
         >

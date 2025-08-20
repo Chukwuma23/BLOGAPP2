@@ -50,7 +50,7 @@ app.use("/comments", commentRoute); // Assuming commentRoute.js is similar to us
 app.use("/posts", postsRoute); // Assuming postRoute.js is similar to userRoute.js
 app.use((error, req, res, next) => {
   res.json({
-     message: error.message || 'An error occurred',
+     message: error.message || 'An error has occurred!',
       status: error.status || 500,
       stack: process.env.NODE_ENV === 'development' ? error.stack : {}
     });
