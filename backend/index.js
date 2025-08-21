@@ -67,8 +67,9 @@ app.use(function (req, res, next) {
 //});
 
 //console.log(process.env.test); // This will log the value of the 'test' variable from .env file
-app.listen(2345, () => {
+const port = process.env.port
+app.listen(port, () => {
   connectDB(); // Connect to MongoDB
   console.log('Connected to MongoDB');
-  console.log('Server is running on port 2345      ');
+  console.log(`Server is running on port ${port}`);
 });
