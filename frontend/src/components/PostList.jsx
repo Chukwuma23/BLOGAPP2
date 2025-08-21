@@ -12,7 +12,7 @@ const fetchPosts = async (pageParam, searchParams) => {
       ...Object.fromEntries([...searchParams]),
     };
 
-    const res = await axios.get(`${import.meta.env.VITE_API_URL}/posts`, { params });
+    const res = await axios.get('https://chuks-blog-app.onrender.com/posts',  { params });
     return res.data;
   } catch (error) {
     console.error('Error fetching posts:', error);
