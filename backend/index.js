@@ -9,13 +9,37 @@ import {clerkMiddleware, requireAuth} from '@clerk/express';
 import cors from 'cors';
 dotenv.config();
 
+
+
+import ImageKit from 'imagekit';
+
+const imagekit = new ImageKit({
+  publicKey: process.env.IMAGEKIT_PUBLIC_KEY,     // ✅ From environment
+  privateKey: process.env.IMAGEKIT_PRIVATE_KEY,   // ✅ From environment  
+  urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT  // ✅ From environment
+});
+
+
 const app = express();
+const allowedOrigins = [
+  'https://chuksblogapp.netlify.app', // Production
+  'http://localhost:5173'            // Development
+];
+
 app.use(cors({
-  origin: process.env.CLIENT_URL,
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      return callback(new Error('CORS not allowed'), false);
+    }
+  },
   credentials: true,
-   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization']
 })); // Enable CORS
+
 app.use(clerkMiddleware()); // Middleware for Clerk authentication
 app.use('/webhook', webhookRoute); // Assuming webhookRoute.js is the route for handling webhooks
 app.use(express.json()); // Middleware to parse JSON bodies
@@ -36,6 +60,7 @@ app.get('/auth-state', (req, res) => {
   //}
   //res.status(200).json({ message: "You have accessed this protected route" });
 //});
+
 
 
 //protected route example2
