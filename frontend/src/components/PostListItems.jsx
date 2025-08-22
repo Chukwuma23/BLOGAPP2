@@ -69,8 +69,8 @@ const PostListItems = ({ post }) => {
                 {/* Post Metadata Row */}
                 <div className="flex items-center gap-2 text-gray-400 text-sm">
                      <span>written by:</span>
-                     <Link className="text-blue-800 hover:underline"  to={`/posts?author=${post.user.username}`}>
-                        {post.user.username}
+                     <Link className="text-blue-800 hover:underline"  to={`/posts?author=${post.user?.username}`}>
+                        {post.user?.username || "Unknown author"}
                     </Link>
                     {/* Category link - TODO: Link to category page */}
                      <span>Cat:</span>
