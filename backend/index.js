@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import userRoute from './routes/userRoute.js';
 import commentRoute from './routes/commentRoute.js';
 import postsRoute from './routes/postsRoute.js';
+import replyRoute from './routes/replyRoute.js'; 
 import connectDB from './lib/connentDB.js';
 import webhookRoute from './routes/webhook.route.js';
 import {clerkMiddleware, requireAuth} from '@clerk/express';
@@ -73,6 +74,7 @@ app.get('/protected2', requireAuth(), (req, res) => {
 app.use('/users', userRoute);
 app.use("/comments", commentRoute); // Assuming commentRoute.js is similar to userRoute.js
 app.use("/posts", postsRoute); // Assuming postRoute.js is similar to userRoute.js
+app.use("/replies", replyRoute);
 app.use((error, req, res, next) => {
   res.json({
      message: error.message || 'An error has occurred!',

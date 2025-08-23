@@ -6,7 +6,7 @@ import PostList from "../components/PostList";
 
 const HomePage = () => {
     return(
-        <div className=" mt-4 flex flex-col  gap-4 ">
+        <div className=" mt-4 flex flex-col  gap-8 ">
             <div className=" flex gap-4 ">
                 <Link to="/">Home</Link>
                 <span>*</span>
@@ -19,8 +19,8 @@ const HomePage = () => {
                 <h1 className="text-grey-800 text-2xl md:text-5xl lg:text-6xl font-bold">
                     Web develpment and AI intergration logic.
                     </h1> 
-                <p className="mt-8 text-sm text-md md:text-xl">
-                    This is a random text for my blog website and it is special to me, thank for reading
+                <p className="mt-8 text-sm text-md md:text-xl text-grey-800">
+                    Featured posts
                     </p>
                 </div>
                
@@ -40,7 +40,7 @@ const HomePage = () => {
                   /> 
                   <text>
                     <textPath className="bg-red-800" href="#circlePath" startOffset="0%">Tell your story.</textPath>
-                     <textPath href="#circlePath" startOffset="50%">shear you ideas.</textPath>
+                     <textPath href="#circlePath" startOffset="50%">Shear your ideas.</textPath>
                      </text>
                       </svg>
                       <button className="bg-blue-800 rounded-full flex items-center justify-center absolute top-14 left-14 right-12 botton-0 n-auto w-20 h-20">
@@ -64,8 +64,8 @@ const HomePage = () => {
                     {/** FEATURED POST */}
                     <FeaturedPost />
                      {/** POST list*/}
-                     <div className="">
-                         <h1 className="my-8 tex-t2xl text-gray-600">Recent Post</h1>
+                     <div className="relative  w-full">
+                         <h1 className="tex-t2xl text-gray-600">Recent Post</h1>
                          <PostList />
                      </div>
         </div>

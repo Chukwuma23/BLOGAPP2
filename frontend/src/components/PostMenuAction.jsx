@@ -101,7 +101,9 @@ const queryClient = useQueryClient();
   });
 
  const  handleDelete = () => {
+   if (window.confirm(`Are you sure you want to delete this post?`)) {
     deleteMutation.mutate();
+   }
   }
 
    const  handlefeature = () => {

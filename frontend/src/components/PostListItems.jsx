@@ -38,14 +38,14 @@ const PostListItems = ({ post }) => {
 
     return (
         // Main container with responsive flex layout
-        <div className="flex flex-col xl:flex-row gap-8 md:gap-12 items-center justify-center mb-8">
+        <div className="flex flex-col xl:flex-row gap-8 md:gap-12 items-center justify-center mb-8 relative mt-10">
             {/* Post Image Section - Only visible on xl screens and hidden on medium */}
             {post.coverImage && (
-                <div className="md:hidden w-full xl:block relative items-center justify-center right-10 left-10 relative">
+                <div className="md:hidden w-full xl:block relative items-center justify-center  relative">
                     <Image
                         urlEndpoint={import.meta.env.VITE_IMAGEKIT_URL_ENDPOINT}
                         src={post.coverImage}
-                        className="rounded-2xl object-cover w-5/6 md:w-4/6 max-w-md"
+                        className="rounded-2xl object-cover w-4/6 md:w-4/6 max-w-md"
                         alt={post.title}
                         transformation={[{
                             height: 300,   // Set image height
@@ -61,13 +61,13 @@ const PostListItems = ({ post }) => {
                 {/* Post Title - Links to full post */}
                 <Link 
                     to={`/${post.slug}`} 
-                    className="text-2xl font-semibold hover:text-blue-600 right-40 left-20 relative"
+                    className="text-2xl font-semibold hover:text-blue-600 relative"
                 >
                     {post.title}
                 </Link>
                 
                 {/* Post Metadata Row */}
-                <div className="flex items-center gap-2 text-gray-400 text-sm">
+                <div className="flex items-center gap-2 text-gray-400 text-md">
                      <span>written by:</span>
                      <Link className="text-blue-800 hover:underline"  to={`/posts?author=${post.user?.username}`}>
                         {post.user?.username || "Unknown author"}
@@ -85,7 +85,7 @@ const PostListItems = ({ post }) => {
                 </div>
                 
                 {/* Post Content Preview */}
-                <p className="text-gray-600 line-clamp-3">
+                <p className="text-gray-600 line-clamp-3 text-base">
                     {post.desc || // Use description if available
                      post.content.replace(/<[^>]*>/g, '').substring(0, 200)}...
                      {/* Fallback to content (remove HTML tags and truncate) */}
@@ -94,7 +94,7 @@ const PostListItems = ({ post }) => {
                 {/* Read More Link */}
                 <Link 
                     to={`/${post.slug}`} 
-                    className="underline text-blue-800 text-sm hover:text-blue-600"
+                    className="underline text-blue-800 text-md hover:text-blue-600"
                 >
                     Read more →
                 </Link>

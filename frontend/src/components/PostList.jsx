@@ -66,7 +66,7 @@ const [ searchParams, setSearchParams ] = useSearchParams();
       }
     >
       {uniquePosts.map(post => post && post._id && (
-        <PostListItems key={post._id} post={post} />
+        <PostListItems  key={post._id} post={post} />
       ))}
     </InfiniteScroll>
   );

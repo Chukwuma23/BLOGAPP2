@@ -40,37 +40,39 @@ const {slug} = useParams();
                         <span>Written by:</span>
                 <Link className="text-blue-800 ">{data.user?.username || 'Unknown Author'} </Link>
                 <span>On:</span>
-                <Link className="text-blue-800 ">{data.user?.category || 'Uncategorized'} </Link>
+                <Link className="text-blue-800 ">{data.category || 'Uncategorized'} </Link>
                  <span>{format(data.createdAt)}</span>
                         </div>  
-                        <p className="text-black-300 text-sm  font-medium">{data.desc} </p>
+                        <p className="text-black-300 text-base  font-medium">{data.desc} </p>
                 </div> 
-               {data.coverImage && <div  className="hidden lg:block w-2/3">
+               {data.coverImage && <div  className="hidden lg:block w-full">
                 <Image 
                                         urlEndpoint={import.meta.env.VITE_IMAGEKIT_URL_ENDPOINT}
                                         src={data.coverImage}
                                         w="600"
                                         h="200"
-                                        className="rounded-2xl" 
-                                        alt="logo" 
+                                        className="rounded-2xl lg:w-4/6 md:w-5/6" 
+                                        alt={data.title}
+                                        loading="lazy"
                                     />
                 </div>}
                 </div> 
                   {/* CONTENT */}
             <div className="flex flex-col md:flex-row gap-8">
-              <div className="lg:text-lg text-sm flex flex-col gap-6 text-justify">
-                 <p className="text-black-500 font-medium">
-                    { data.content?.replace(/<[^>]*>/g, '').substring(0, 600) || ''}...
-                   </p>
+              <div className="lg:text-lg text-base flex flex-col gap-6 text-justify">
+              <div 
+                   className="text-black-500 font-medium"
+                       dangerouslySetInnerHTML={{ __html: data.content }} 
+                />
                 </div>
                   {/* menu */}
                   <div className=" px-4  h-max sticky top-8 ">
                     <h1 className=" mb-4 text-sm font-medium">Auther</h1>
                     <div className="flex flex-col gap-4">
                     <div className="flex items-center gap-4">
-                         {data.user?.img &&   <Image 
+                         {data.user?.image &&   <Image 
                                         urlEndpoint={import.meta.env.VITE_IMAGEKIT_URL_ENDPOINT}
-                                        src={data.user.img}
+                                        src={data.user?.image}
                                         w="48"
                                         h="48"
                                         className=" w-12

@@ -4,7 +4,7 @@ import User from '../model/userModel.js';
 export const getPostComments = async (req, res) => {
      try {
     const comments = await Comment.find({post: req.params.postId})
-    .populate("user", "username img")
+    .populate("user", "username image")
     .sort({createdAt: - 1});
     res.json(comments);
      } catch (error) {
@@ -25,6 +25,7 @@ const newComment = new Comment({
     post: postId,
 });
 const saveComment = await newComment.save()
+
 setTimeout(() => {
 res.status(201).json(saveComment)
 }, 3000);
