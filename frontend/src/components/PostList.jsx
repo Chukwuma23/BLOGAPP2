@@ -54,7 +54,7 @@ const [ searchParams, setSearchParams ] = useSearchParams();
   }
 
   return(
-    <InfiniteScroll
+    <InfiniteScroll 
       dataLength={uniquePosts.length}
       next={fetchNextPage}
       hasMore={!!hasNextPage}

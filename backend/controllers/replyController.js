@@ -93,3 +93,56 @@ export const deleteReply = async (req, res) => {
 };
 
 
+// Like a reply
+export const likeReply = async (req, res) => {
+  try {
+    const clerkUserId = req.auth().userId;
+    if (!clerkUserId) {
+      return res.status(401).json({ message: 'Not authenticated!' });
+    }
+
+    const user = await User.findOne({ clerkUserId });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const reply = await Reply.findById(req.params.id);
+    if (!reply) {
+      return res.status(404).json({ message: 'Reply not found' });
+    }
+
+    // Check if user already liked
+    const alreadyLiked = reply.likes.includes(user._id);
+    
+    if (alreadyLiked) {
+      // Unlike
+      reply.likes.pull(user._id);
+      reply.likeCount = Math.max(0, reply.likeCount - 1);
+    } else {
+      // Like
+      reply.likes.push(user._id);
+      reply.likeCount += 1;
+    }
+
+    await reply.save();
+    res.json({ 
+      likeCount: reply.likeCount,
+      isLiked: !alreadyLiked 
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Get reply likes
+export const getReplyLikes = async (req, res) => {
+  try {
+    const reply = await Reply.findById(req.params.id)
+      .populate('likes', 'username image')
+      .select('likes likeCount');
+    
+    res.json(reply);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

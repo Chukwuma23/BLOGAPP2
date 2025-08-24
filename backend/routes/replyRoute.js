@@ -3,7 +3,9 @@ import express from 'express';
 import { 
   getReplies, 
   addReply, 
-  deleteReply 
+  deleteReply,
+  likeReply,     
+  getReplyLikes 
 } from '../controllers/replyController.js';
 
 const router = express.Router();
@@ -11,5 +13,8 @@ const router = express.Router();
 router.get('/:commentId', getReplies);
 router.post('/:commentId', addReply);
 router.delete('/:id', deleteReply);
+router.patch('/:id/like', likeReply);  
+router.get('/:id/likes', getReplyLikes);   
+
 
 export default router;

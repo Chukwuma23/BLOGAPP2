@@ -38,10 +38,10 @@ const PostListItems = ({ post }) => {
 
     return (
         // Main container with responsive flex layout
-        <div className="flex flex-col xl:flex-row gap-8 md:gap-12 items-center justify-center mb-8 relative mt-10">
+        <div className="flex flex-col xl:flex-row gap-8 md:gap-12  mb-8 relative mt-10">
             {/* Post Image Section - Only visible on xl screens and hidden on medium */}
             {post.coverImage && (
-                <div className="md:hidden w-full xl:block relative items-center justify-center  relative">
+                <div className="md:hidden w-full xl:block relative">
                     <Image
                         urlEndpoint={import.meta.env.VITE_IMAGEKIT_URL_ENDPOINT}
                         src={post.coverImage}

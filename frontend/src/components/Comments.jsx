@@ -54,10 +54,9 @@ const Comments = ({postId}) => {
   
   // Check if user is logged in
   if (!user) {
-    if (window.confirm("You must login to add comments. \n \n  Are you sure you want to login?")) {
-      // Use navigate (lowercase) from useNavigate hook
+     toast.error("Please login to add comments");
+       // Use navigate (lowercase) from useNavigate hook
       navigate("/login");
-    }
     return; // Stop execution if user is not logged in
   }
   
@@ -71,8 +70,10 @@ const Comments = ({postId}) => {
 };
 
   return(
-    <div className="flex flex-col gap-8 lg:w-3/5">
-      <h1 className="text-xl text-gray-500 underline">Comments</h1>
+    <div className="flex flex-col gap-8 lg:w-3/5 h-[70vh]">
+     <h1 className="text-xl text-gray-500 underline">Comments</h1>
+      <div className=" overflow-auto flex-1">
+
       {/* Display comments */}
       {data.map((comment) => (
         <Comment 
@@ -82,8 +83,8 @@ const Comments = ({postId}) => {
         />
       ))}
 
-      
-        <form onSubmit={handleSubmit} className="flex items-center justify-between gap-8 w-full">
+      </div>
+        <form onSubmit={handleSubmit} className="flex items-center justify-between gap-8 w-full mb-4">
           <textarea
             name="desc"
             placeholder="Write a comment..." 
