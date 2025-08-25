@@ -11,7 +11,7 @@ const fetchComments = async (postId) => {
   return res.data;
 };
 
-const Comments = ({postId}) => {
+const Comments = ({postId, post}) => {
   const {user} = useUser();  
   const {getToken} = useAuth();
    const navigate = useNavigate();
@@ -23,7 +23,7 @@ const Comments = ({postId}) => {
 
   const queryClient = useQueryClient();
 
-  const commentMutation = useMutation({
+/*  const commentMutation = useMutation({
     mutationFn: async (newComment) => {
       const token = await getToken();
       return axios.post(
@@ -44,7 +44,58 @@ const Comments = ({postId}) => {
       const serverMessage = error.response?.data?.message || 'Error creating comment';
       toast.error(serverMessage);
     }
-  });
+  });*/
+
+
+  const commentMutation = useMutation({
+  mutationFn: async (newComment) => {
+    const token = await getToken();
+    return axios.post(
+      `${import.meta.env.VITE_API_URL}/comments/${postId}`,
+      newComment,
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+      }
+    );
+  },
+  onSuccess: (response) => {
+    const { commentCount } = response.data;
+    
+    // Invalidate comments query to refetch
+    queryClient.invalidateQueries({ queryKey: ['comments', postId] });
+    
+    // Update the post's comment count in the cache
+    queryClient.setQueryData(['posts'], (oldPosts) => {
+      if (!oldPosts) return oldPosts;
+      return oldPosts.map((post) => {
+        if (post._id === postId) {
+          return { 
+            ...post, 
+            commentCount: commentCount 
+          };
+        }
+        return post;
+      });
+    });
+    
+    // Also update individual post query if it exists
+    queryClient.setQueryData(['post', postId], (oldPost) => {
+      if (!oldPost) return oldPost;
+      return { 
+        ...oldPost, 
+        commentCount: commentCount 
+      };
+    });
+  },
+  onError: (error) => {
+    const serverMessage = error.response?.data?.message || 'Error creating comment';
+    toast.error(serverMessage);
+  }
+});
+
 
   if (isPending) return 'Loading...';
   if (error) return 'An error has occurred: ' + error.message;
@@ -71,10 +122,28 @@ const Comments = ({postId}) => {
 
   return(
     <div className="flex flex-col gap-8 lg:w-3/5 h-[70vh]">
-     <h1 className="text-xl text-gray-500 underline">Comments</h1>
+       {/* Comment button */}
+        <button className="flex items-center gap-2 px-4 py-2 rounded-lg
+         text- font-medium text-gray-600 hover:bg-gray-100 transition-colors">
+          <svg
+           xmlns="http://www.w3.org/2000/svg"
+            width="40"
+             height="40"
+              viewBox="0 0 24 24"
+               fill="none" 
+               stroke="currentColor" 
+               strokeWidth="4"
+               className=""
+               >
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+        {(data?.length || 0)}
+        </button>
       <div className=" overflow-auto flex-1">
 
       {/* Display comments */}
+      
+        
       {data.map((comment) => (
         <Comment 
           key={comment._id} 

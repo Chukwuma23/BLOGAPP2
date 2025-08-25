@@ -97,27 +97,6 @@ export const getPost = async (req, res) => {
   }
 };
 
-/*/ Create a new post
-export const createPost = async (req, res) => {
-  console.log('Request Auth:', req.auth());
-  try {
-   const clerkUserId = req.auth().userId; // Get the Clerk user ID from the request
-    //console.log(req.headers);
-   if (!clerkUserId) {
-      return res.status(401).json({ message: 'Not authorized' });
-    }
-    const user = await User.findOne({ clerkUserId });
-    if (!user) {
-      return res.status(401).json({ message: 'User not found' });
-    }
-    const newPost = new Post({ user: user._id, ...req.body });
-    const savedPost = await newPost.save();
-    res.status(201).json(savedPost);
-  } catch (error) {
-    console.error('Error creating post:', error);
-    res.status(500).json({ message: 'Error creating post' });
-  }
-};*/
 
 export const createPost = async (req, res) => {
   try {
@@ -142,9 +121,9 @@ export const createPost = async (req, res) => {
     // 3. Validate required fields
     const { 
       title, 
-      content,  // Changed from 'value' to 'content'
-      coverImage, // Changed from 'cover'
-      images,    // Changed from 'img' (now accepts array)
+      content,  
+      coverImage, 
+      images,    
       videos,
       desc = '',
       category = 'general',
@@ -329,5 +308,225 @@ export const uploadAuth = async (req, res) => {
   } catch (error) {
     console.error('Error in uploadAuth:', error);
     res.status(500).json({ message: 'Error generating upload authentication' });
+  }
+};
+
+
+export const updatePost = async (req, res) => {
+  try {
+    // 1. Authentication check
+    const clerkUserId = req.auth().userId;
+    if (!clerkUserId) {
+      return res.status(401).json({
+        success: false,
+        message: 'Not authorized'
+      });
+    }
+
+    // 2. Find user in database
+    const user = await User.findOne({ clerkUserId });
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+
+    // 3. Check if post exists and user has permission
+    const postId = req.params.id;
+    const post = await Post.findById(postId);
+    
+    if (!post) {
+      return res.status(404).json({
+        success: false,
+        message: 'Post not found'
+      });
+    }
+
+    // Check if user owns the post or is admin
+    const role = req.auth().sessionClaims?.metadata?.role || "user";
+    if (post.user.toString() !== user._id.toString() && role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: 'Not authorized to edit this post'
+      });
+    }
+
+    // 4. Validate and extract fields
+    const {
+      title,
+      content,
+      coverImage,
+      images,
+      videos,
+      desc,
+      category,
+      isFeatured
+    } = req.body;
+
+    // Enhanced validation
+    const errors = {};
+    if (title && !title.trim()) errors.title = 'Title cannot be empty';
+    if (content && !content.trim()) errors.content = 'Content cannot be empty';
+    if (title && title.length > 120) errors.title = 'Title must be less than 120 characters';
+    
+    if (Object.keys(errors).length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Validation failed',
+        errors
+      });
+    }
+
+    // 5. Generate new slug if title changed
+    let slug = post.slug;
+    if (title && title !== post.title) {
+      slug = slugify(title, {
+        lower: true,
+        strict: true,
+        trim: true
+      });
+
+      // Check for existing slugs and make unique if needed
+      const slugExists = await Post.findOne({ slug, _id: { $ne: postId } });
+      if (slugExists) {
+        const randomSuffix = Math.floor(Math.random() * 10000);
+        slug = `${slug}-${randomSuffix}`;
+      }
+    }
+
+    // 6. Update post
+    const updatedData = {
+      ...(title && { title: title.trim() }),
+      ...(slug && { slug }),
+      ...(content && { content: content.trim() }),
+      ...(desc !== undefined && { desc: desc.trim() }),
+      ...(category && { category }),
+      ...(coverImage !== undefined && { coverImage }),
+      ...(images !== undefined && { images: Array.isArray(images) ? images : images ? [images] : [] }),
+      ...(videos !== undefined && { videos: Array.isArray(videos) ? videos : videos ? [videos] : [] }),
+      ...(isFeatured !== undefined && role === "admin" && { isFeatured })
+    };
+
+    const updatedPost = await Post.findByIdAndUpdate(
+      postId,
+      updatedData,
+      { new: true, runValidators: true }
+    ).populate('user', 'username');
+
+    // 7. Return success response
+    res.status(200).json({
+      success: true,
+      message: 'Post updated successfully',
+      post: updatedPost
+    });
+
+  } catch (error) {
+    console.error('Error updating post:', error);
+    
+    // Handle specific error types
+    if (error.name === 'ValidationError') {
+      const errors = Object.keys(error.errors).reduce((acc, key) => {
+        acc[key] = error.errors[key].message;
+        return acc;
+      }, {});
+      
+      return res.status(400).json({
+        success: false,
+        message: 'Validation failed',
+        errors
+      });
+    }
+    
+    // Handle duplicate key error (unique slug)
+    if (error.code === 11000) {
+      return res.status(400).json({
+        success: false,
+        message: 'Slug already exists',
+        error: 'Please try again with a different title'
+      });
+    }
+    
+    // Generic server error
+    res.status(500).json({
+      success: false,
+      message: 'Server error updating post',
+      error: process.env.NODE_ENV === 'development' ? error.message : 'Internal server error'
+    });
+  }
+};
+
+
+
+export const getPostById = async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id).populate("user", "username image");
+    console.log('Database result by ID:', post);
+    if (!post) {
+      return res.status(404).json({ message: 'Post not found' });
+    }
+    res.status(200).json(post);
+  } catch (error) {
+    console.error('Error in getPostById:', error);
+    res.status(500).json({ message: 'Error fetching post' });
+  }
+};
+
+
+// Like post like
+export const likePost = async (req, res) => {
+  try {
+    const clerkUserId = req.auth().userId;
+    if (!clerkUserId) {
+      return res.status(401).json({ message: 'Not authenticated!' });
+    }
+
+    const user = await User.findOne({ clerkUserId });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const post = await Post.findById(req.params.id);
+    if (!post) {
+      return res.status(404).json({ message: 'Post not found' });
+    }
+
+    // Check if user already liked using proper ObjectId comparison
+    const alreadyLiked = post.likes.some(likeId => 
+      likeId.toString() === user._id.toString()
+    );
+    
+    if (alreadyLiked) {
+      // Unlike
+      post.likes.pull(user._id);
+      post.likeCount = Math.max(0, post.likeCount - 1);
+    } else {
+      // Like
+      post.likes.push(user._id);
+      post.likeCount += 1;
+    }
+
+    await post.save();
+    
+    res.json({ 
+      likeCount: post.likeCount,
+      isLiked: !alreadyLiked 
+    });
+  } catch (error) {
+    console.error('Error in likePost:', error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Get post likes
+export const getPostLikes = async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id)
+      .populate('likes', 'username image')
+      .select('likes likeCount');
+    
+    res.json(post);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };

@@ -2,12 +2,12 @@ import { useUser, useAuth } from "@clerk/clerk-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom"; // Changed from navigate to useNavigate
+import { useNavigate } from "react-router-dom";
 
 const PostMenuAction = ({post}) => {
   const {user} = useUser();
   const {getToken} = useAuth();
-  const navigate = useNavigate(); // Properly use the useNavigate hook
+  const navigate = useNavigate(); 
 
   const {isPending, error, data: savedPosts} = useQuery({
     queryKey: ["savedPosts"],
@@ -117,13 +117,26 @@ const queryClient = useQueryClient();
     saveMutation.mutate();
   }
 
+  
+
+  // edit post function
+const editMutation = useMutation({
+  mutationFn: async () => {
+    navigate(`/edit/${post._id}`);
+  }
+});
+
+const handleEdit = () => {
+  editMutation.mutate();
+};
+
   return(
     <div className="">
       <h1 className="mt-8 mb-4 text-sm font-medium">Actions</h1>
       {isPending ? (
         "Loading..."
       ) : error ? (
-        "Saved post fetching failed"
+       <p className="text-red-500"> Action features fetching failed! <br />(Unauthorize user or network error!)</p>
       ) : (
         <div className="flex items-center gap-2 py-2 text-sm cursor-pointer"  onClick={handleSave}>
           <svg xmlns="http://www.w3.org/2000/svg" 
@@ -182,6 +195,24 @@ const queryClient = useQueryClient();
     </svg>
     <span>{post.isFeatured ? 'Unfeature' : 'Feature'}</span>
     {featureMutation.isPending && <span className="text-sm"> (In progress...)</span>}
+  </div>
+)}
+
+  {/**edit post */}
+{user && (post.user?.username === user.username || isAdmin) && (
+  <div className="flex items-center gap-2 py-2 text-sm cursor-pointer"
+    onClick={handleEdit}
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" 
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      strokeWidth="blue"
+      stroke="blue"
+    >
+      <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+    </svg>
+    <span>Edit this post</span>
   </div>
 )}
     </div>

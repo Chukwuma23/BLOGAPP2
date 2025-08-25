@@ -38,7 +38,7 @@ const [ searchParams, setSearchParams ] = useSearchParams();
   });
 //console.log('PostList data:', data);
 
-  if (status === 'loading') return 'Loading...'
+  if (status === 'loading') return 'Loading posts please wait...'
 
   if (status === 'error') return 'An error has occurred ' + error.message
 

@@ -1,5 +1,6 @@
 import Comment from '../model/commentModel.js'
 import User from '../model/userModel.js'; 
+import Post from '../model/postModel.js'; 
 
 export const getPostComments = async (req, res) => {
      try {
@@ -26,6 +27,10 @@ const newComment = new Comment({
     post: postId,
 });
 const saveComment = await newComment.save()
+ // Update post comment count
+    await Post.findByIdAndUpdate(postId, {
+        $inc: { commentCount: 1 }
+    });
 
 setTimeout(() => {
 res.status(201).json(saveComment)
@@ -60,6 +65,13 @@ export const deleteComment = async (req, res) => {
         if (!deletedComment) {
             return res.status(403).json({ message: 'Not authorized to delete this comment' });
         }
+          if (deletedComment) {
+            // Update post comment count
+            await Post.findByIdAndUpdate(deletedComment.post, {
+                $inc: { commentCount: -1 }
+            });
+        }
+
 
         return res.status(200).json({ message: 'Comment deleted successfully' });
     } catch (error) {
@@ -122,3 +134,27 @@ export const getCommentLikes = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+
+// Get comment count for a post
+export const getCommentCount = async (req, res) => {
+  try {
+    const postId = req.params.id;
+    
+    // Option A: Get from Post model (if you store commentCount there)
+    const post = await Post.findById(postId).select('commentCount');
+    if (!post) return res.status(404).json({ message: 'Post not found' });
+    
+    res.json({ commentCount: post.commentCount || 0 });
+    
+    // Option B: Count comments directly (if you don't store commentCount)
+    // const commentCount = await Comment.countDocuments({ post: postId });
+    // res.json({ commentCount });
+    
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
+

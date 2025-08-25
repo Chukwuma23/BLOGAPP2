@@ -2,10 +2,14 @@ import express from 'express';
 import {
     getPosts,
     getPost,
+    getPostById, 
     createPost,
+    updatePost,
     deletePost,
     uploadAuth,
     featurePost,
+    likePost,
+    getPostLikes
   } from '../controllers/post.controller.js';
 import increaseVisit from '../middlwares/increaseVisit.js';
 
@@ -17,5 +21,8 @@ router.get('/:slug', increaseVisit, getPost);
 router.post('/', createPost);
 router.delete('/:id', deletePost);
 router.patch('/feature', featurePost);
-
+router.put('/:id', updatePost);
+router.get('/id/:id', getPostById);
+router.patch('/:id/like', likePost);   
+router.get('/:id/likes', getPostLikes);   
 export default router;

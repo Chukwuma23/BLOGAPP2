@@ -21,6 +21,7 @@ import {
 } from '@tanstack/react-query'
 import {ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import EditPost from './components/EditPost.jsx';
 
 const queryClient = new QueryClient()
 
@@ -68,6 +69,14 @@ const router = createBrowserRouter([
   {
     path: "*", // Catch-all 404 route
     element: <ErrorPage status={404} />
+  },
+   {
+    path: "/edit/:id", 
+    element: <EditPost />
+  },
+   {
+    path: "/comment",
+    element: <Comment />
   }
 ]
 }
