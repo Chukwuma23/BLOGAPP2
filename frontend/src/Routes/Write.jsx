@@ -160,8 +160,8 @@ const Write = () => {
                         <option value="general">General</option>
                         <option value="web design">Web design</option>
                         <option value="development">Development</option>
-                        <option value="database">Database</option>
-                        <option value="search">search engine</option>
+                        <option value="health">Health</option>
+                        <option value="sports">Sports</option>
                         <option value="marketing">Marketing</option>
                     </select>
                 </div>

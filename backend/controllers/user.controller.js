@@ -65,3 +65,46 @@ export const savePost = async (req, res) => {
         return res.status(500).json({ message: 'Server error' });
     }
 };
+
+
+
+export const createTestUser = async (req, res) => {
+  try {
+    const testUser = new User({
+      clerkUserId: 'test_' + Date.now(),
+      username: 'testuser_' + Date.now(),
+      email: 'test' + Date.now() + '@example.com',
+      image: '',
+    });
+    
+    const savedUser = await testUser.save();
+    console.log('✅ Test user created successfully:', savedUser._id);
+    return res.status(201).json({
+      message: 'Test user created',
+      user: savedUser
+    });
+  } catch (error) {
+    console.error('❌ Error creating test user:', error);
+    return res.status(500).json({ 
+      message: 'Test failed', 
+      error: error.message 
+    });
+  }
+};
+
+export const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find({});
+    console.log('📋 Total users in DB:', users.length);
+    return res.status(200).json({
+      count: users.length,
+      users: users
+    });
+  } catch (error) {
+    console.error('❌ Error fetching users:', error);
+    return res.status(500).json({ 
+      message: 'Error fetching users', 
+      error: error.message 
+    });
+  }
+};

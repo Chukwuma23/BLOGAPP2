@@ -22,6 +22,9 @@ import {
 import {ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import EditPost from './components/EditPost.jsx';
+import NetworkStatus from "./nexwork/NextworkStatus";
+import LoadingSpinner from './loadingSpinner/loadingSpinner.jsx';
+import About from './components/About.jsx';
 
 const queryClient = new QueryClient()
 
@@ -77,6 +80,10 @@ const router = createBrowserRouter([
    {
     path: "/comment",
     element: <Comment />
+  },
+  {
+    path: "/about",
+    element: <About />
   }
 ]
 }
@@ -90,5 +97,12 @@ createRoot(document.getElementById('root')).render(
         <ToastContainer position='top-right'/>
       </QueryClientProvider>
     </ClerkProvider>
+    
+      <NetworkStatus 
+        onlineMessage="Your internet connection was restored!"
+        offlineMessage="You are currently offline"
+        position="bottom"
+        showRefreshButton={true}
+      />
   </StrictMode>
 );

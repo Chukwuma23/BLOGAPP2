@@ -83,10 +83,10 @@ const handleCategoryChange = (category) => {
             <div className="flex flex-col gap-1 text-md">
            <Link className="underline cursor-pointer"  onClick={() => handleCategoryChange("general") }>All</Link>
           <Link className="underline cursor-pointer"  onClick={() => handleCategoryChange("development") }>Development</Link>
-          <Link className="underline cursor-pointer"  onClick={() => handleCategoryChange("database") }>Database</Link>
+          <Link className="underline cursor-pointer"  onClick={() => handleCategoryChange("health") }>Health</Link>
           <Link className="underline cursor-pointer"  onClick={() => handleCategoryChange("marketing") }>Marketing</Link>
           <Link className="underline cursor-pointer"  onClick={() => handleCategoryChange("web-design") }>Web design</Link>
-          <Link className="underline cursor-pointer"  onClick={() => handleCategoryChange("search") }>Search engine</Link>
+          <Link className="underline cursor-pointer"  onClick={() => handleCategoryChange("sport") }>Sports</Link>
             </div>
         </div>
     );

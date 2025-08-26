@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { format } from 'timeago.js';
+import LoadingSpinner from '../loadingSpinner/loadingSpinner';
 
 const FeaturedPost = () => {
   const fetchPost = async () => {
@@ -15,7 +16,7 @@ const FeaturedPost = () => {
     queryFn: () => fetchPost(),
   });
 
-  if (isPending) return 'Loading...';
+  if (isPending) return  <LoadingSpinner text="Loading content please wait..." />;
   if (error) return 'An error has occurred: ' + error.message;
 
   const posts = data?.posts || [];
@@ -48,7 +49,7 @@ const FeaturedPost = () => {
       )}
 
       {/** OTHER POSTS */}
-      <div className='lg:w-3/4 flex flex-col gap-5'>
+      <div className='lg:w-3/4 flex flex-rol md:flex-col lg:flex-col gap-5'>
         {/** SECOND POST */}
         {posts[1] && (
           <div className='flex justify-between gap-4'>

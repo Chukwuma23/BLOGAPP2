@@ -3,6 +3,8 @@ import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useSearchParams } from "react-router-dom";
+import ErrorPage from "../Routes/ErrorPage.jsx"
+import LoadingSpinner from "../loadingSpinner/loadingSpinner.jsx";
 
 const fetchPosts = async (pageParam, searchParams) => {
   try {
@@ -38,9 +40,9 @@ const [ searchParams, setSearchParams ] = useSearchParams();
   });
 //console.log('PostList data:', data);
 
-  if (status === 'loading') return 'Loading posts please wait...'
+  if (status === 'loading') return  <LoadingSpinner text="Loading content..." />
 
-  if (status === 'error') return 'An error has occurred ' + error.message
+  if (status === 'error') return  <ErrorPage />
 
   const allPosts = data?.pages.flatMap((page) => page.posts) || [];
   // Filter out duplicate posts by _id
@@ -58,7 +60,7 @@ const [ searchParams, setSearchParams ] = useSearchParams();
       dataLength={uniquePosts.length}
       next={fetchNextPage}
       hasMore={!!hasNextPage}
-      loader={<h4>Loading more posts...</h4>}
+      loader={ <LoadingSpinner text="Fetching more most..." />}
       endMessage={
         <p style={{ textAlign: 'center' }}>
           <b>All posts loaded</b>

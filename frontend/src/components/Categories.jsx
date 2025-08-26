@@ -25,12 +25,12 @@ const Categories = () => {
                          <Link
                         to="/posts?cat=database"
                        className="hover:bg-blue-800 hover:text-white rounded-full px-4 py-2"
-                       >Database
+                       >Health
                        </Link>
                         <Link
                         to="/posts?cat=search-engines"
                        className="hover:bg-blue-800 hover:text-white rounded-full px-4 py-2"
-                       >Search Engines
+                       >Sports
                        </Link> 
                        <Link
                         to="/posts?cat=marketing"

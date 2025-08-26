@@ -1,3 +1,9 @@
+
+
+
+
+
+
 import express from 'express';
 import dotenv from 'dotenv';
 import userRoute from './routes/userRoute.js';
@@ -9,17 +15,6 @@ import webhookRoute from './routes/webhook.route.js';
 import {clerkMiddleware, requireAuth} from '@clerk/express';
 import cors from 'cors';
 dotenv.config();
-
-
-
-import ImageKit from 'imagekit';
-
-const imagekit = new ImageKit({
-  publicKey: process.env.IMAGEKIT_PUBLIC_KEY,     // ✅ From environment
-  privateKey: process.env.IMAGEKIT_PRIVATE_KEY,   // ✅ From environment  
-  urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT  // ✅ From environment
-});
-
 
 const app = express();
 const allowedOrigins = [
@@ -41,8 +36,9 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 })); // Enable CORS
 
+app.use('/webhooks/clerk', express.raw({ type: 'application/json' }), webhookRoute);
+// Assuming webhookRoute.js is the route for handling webhooks
 app.use(clerkMiddleware()); // Middleware for Clerk authentication
-app.use('/webhook', webhookRoute); // Assuming webhookRoute.js is the route for handling webhooks
 app.use(express.json()); // Middleware to parse JSON bodies
 
 // Example route to demonstrate Clerk authentication

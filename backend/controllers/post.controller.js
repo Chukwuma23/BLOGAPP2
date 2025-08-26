@@ -1,12 +1,12 @@
+import dotenv from 'dotenv';
 import Post from '../model/postModel.js';
 import User from '../model/userModel.js';
 import slugify from 'slugify';
-import ImageKit from 'imagekit';
-import dotenv from 'dotenv';
 import { Admin } from 'mongodb';
 dotenv.config();
+import ImageKit from 'imagekit';
 
-
+ 
 
 export const getPosts = async (req, res) => {
   try {
@@ -294,15 +294,33 @@ export const featurePost = async (req, res) => {
 };
 
 
+let imagekitInstance = null;
 
-const imagekit = new ImageKit({
-  publicKey: process.env.IMAGEKIT_PUBLIC_KEY,
-  privateKey: process.env.IMAGEKIT_PRIVATE_KEY,
-  urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT
-});
+const getImageKitInstance = () => {
+  if (!imagekitInstance) {
+    // Validate that required environment variables are set
+    const requiredEnvVars = ['IMAGEKIT_PUBLIC_KEY', 'IMAGEKIT_PRIVATE_KEY', 'IMAGEKIT_URL_ENDPOINT'];
+    const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
+    
+    if (missingVars.length > 0) {
+      throw new Error(`Missing required ImageKit environment variables: ${missingVars.join(', ')}`);
+    }
+    
+    imagekitInstance = new ImageKit({
+      publicKey: process.env.IMAGEKIT_PUBLIC_KEY,
+      privateKey: process.env.IMAGEKIT_PRIVATE_KEY,
+      urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT
+    });
+  }
+  return imagekitInstance;
+};
+
+
+
 
 export const uploadAuth = async (req, res) => {
   try {
+     const imagekit = getImageKitInstance();
     const result = imagekit.getAuthenticationParameters();
     res.status(200).json(result);
   } catch (error) {

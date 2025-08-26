@@ -6,6 +6,7 @@ import Comments from "../components/Comments";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "timeago.js";
+import LoadingSpinner from "../loadingSpinner/loadingSpinner";
 
 
 const fetchPost = async (slug) => {
@@ -24,7 +25,7 @@ const {slug} = useParams();
         queryFn: () => fetchPost(slug),
     })
 
-      if (isPending) return 'Loading...';
+      if (isPending) return  <LoadingSpinner text="Loading content..." />;
       if (error) return 'An error has occurred: ' + error.message;
       if (!data) return 'Post not found!';
 
