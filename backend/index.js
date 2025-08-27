@@ -1,9 +1,4 @@
 
-
-
-
-
-
 import express from 'express';
 import dotenv from 'dotenv';
 import userRoute from './routes/userRoute.js';
@@ -17,6 +12,8 @@ import cors from 'cors';
 dotenv.config();
 
 const app = express();
+app.use('/webhooks', webhookRoute);
+app.use(express.json());
 const allowedOrigins = [
   'https://chuksblogapp.netlify.app', // Production
   'http://localhost:5173'            // Development
@@ -36,10 +33,10 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 })); // Enable CORS
 
-app.use('/webhooks/clerk', express.raw({ type: 'application/json' }), webhookRoute);
+
 // Assuming webhookRoute.js is the route for handling webhooks
 app.use(clerkMiddleware()); // Middleware for Clerk authentication
-app.use(express.json()); // Middleware to parse JSON bodies
+//app.use(express.json()); // Middleware to parse JSON bodies
 
 // Example route to demonstrate Clerk authentication
 app.get('/auth-state', (req, res) => {
