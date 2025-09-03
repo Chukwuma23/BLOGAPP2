@@ -259,6 +259,7 @@ return () => {
             src={comment.user?.image}
             className="w-10 h-10 rounded-full object-cover"
             alt="User avatar"
+            loading="lazy"
           />
         )}
         <span className="font-medium text-white">
@@ -351,6 +352,7 @@ return () => {
                       src={reply.user.image}
                       className="w-8 h-8 rounded-full object-cover"
                       alt="User avatar"
+                      loading="lazy"
                     />
                   )}
                   <span className="font-medium text-white text-sm">

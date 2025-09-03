@@ -144,6 +144,7 @@ const handleLike = () => {
           width: 400,
           quality: 80
         }]}
+        loading="lazy"
       />
     </div>
   )}

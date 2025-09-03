@@ -79,6 +79,7 @@ const {slug} = useParams();
                                         className=" w-12
                                         h-12 rounded-full object-cover" 
                                         alt="logo" 
+                                        loading="lazy"
                                     />}
                                     <Link className="text-blue-800">{data.user?.username || 'Unknown Author'}</Link>
                              </div>
@@ -93,6 +94,7 @@ const {slug} = useParams();
                                         alt="logo"
                                         width="20"
                                         height="20"
+                                        loading="lazy"
                                     />
                                 </Link>
                                   <Link>
@@ -103,6 +105,7 @@ const {slug} = useParams();
                                         alt="logo" 
                                          width="20"
                                         height="20"
+                                        loading="lazy"
                                     />
                                 </Link>
                                 </div>

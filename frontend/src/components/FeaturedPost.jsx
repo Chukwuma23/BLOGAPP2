@@ -35,6 +35,7 @@ const FeaturedPost = () => {
               src={posts[0].coverImage}
               className="w-5/6 rounded-3xl object-cover md:w-4/6 md:h-3/6 lg:h-5/6 lg:w-5/6 xl:h-5/6 xl:w-5/6"
               alt="logo"
+              loading="lazy"
             />
           )}
           <div className='text-sm flex items-center gap-2'>
@@ -60,6 +61,7 @@ const FeaturedPost = () => {
                   src={posts[1].coverImage}
                   className="lg:w-5/6 lg:-5/6 xl:-5/6 w-full md:w-4/6 rounded-3xl object-cover aspect-video"
                   alt="logo"
+                  loading="lazy"
                 />
               </div>
             )}
@@ -86,6 +88,7 @@ const FeaturedPost = () => {
                   src={posts[2].coverImage}
                   className="lg:w-5/6 lg:-5/6 w-full md:w-4/6 rounded-3xl object-cover aspect-video"
                   alt="logo"
+                  loading="lazy"
                 />
               </div>
             )}
@@ -112,6 +115,7 @@ const FeaturedPost = () => {
                   src={posts[3].coverImage}
                   className="lg:w-5/6 lg:-5/6 w-full md:w-4/6 rounded-3xl object-cover aspect-video"
                   alt="logo"
+                  loading="lazy"
                 />
               </div>
             )}
