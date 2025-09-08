@@ -50,12 +50,12 @@ const FeaturedPost = () => {
       )}
 
       {/** OTHER POSTS */}
-      <div className='lg:w-3/4 flex flex-rol md:flex-col lg:flex-col gap-5'>
+      <div className='lg:w-3/4 flex flex-col md:flex-col lg:flex-col gap-8 w-full'>
         {/** SECOND POST */}
         {posts[1] && (
           <div className='flex justify-between gap-4'>
             {posts[1].coverImage && (
-              <div className='w-5/6 aspect-video'>
+              <div className='w-full aspect-video'>
                 <Image
                   urlEndpoint={import.meta.env.VITE_IMAGEKIT_URL_ENDPOINT}
                   src={posts[1].coverImage}
@@ -65,13 +65,13 @@ const FeaturedPost = () => {
                 />
               </div>
             )}
-            <div className='w-2/3'>
+            <div className='w-1/2'>
               <div className='flex items-center gap-2 mb-4'>
-                <h1 className='font-semi-bold'>02.</h1>
-                <Link className='text-blue-800 sm:text-sm'>{posts[1].category || 'Uncategorized'}</Link>
-                <span className='text-gray-500 text-md'>{format(posts[1].createdAt)}</span>
+                <h1 className='font-semi-bold text-xs'>02.</h1>
+                <Link className='text-blue-800 text-xs'>{posts[1].category || 'Uncategorized'}</Link>
+                <span className='text-gray-500 text-xs'>{format(posts[1].createdAt)}</span>
               </div>
-              <Link to={posts[1].slug} className='text-base sm:text-md md:text-md lg:text-md xl:text-lg font-medium'>
+              <Link to={posts[1].slug} className='text-base text-xs md:text-md lg:text-md xl:text-lg font-medium'>
                 {posts[1].title}
               </Link>
             </div>
@@ -92,13 +92,13 @@ const FeaturedPost = () => {
                 />
               </div>
             )}
-            <div className='w-2/3'>
+            <div className='w-1/2'>
               <div className='flex items-center gap-2 mb-4'>
-                <h1 className='font-semi-bold'>03.</h1>
-                <Link className='text-blue-800 sm:text-sm'>{posts[2].category || 'Uncategorized'}</Link>
-                <span className='text-gray-500 text-md'>{format(posts[2].createdAt)}</span>
+                <h1 className='font-semi-bold text-xs'>03.</h1>
+                <Link className='text-blue-800 text-xs'>{posts[2].category || 'Uncategorized'}</Link>
+                <span className='text-gray-500 text-xs'>{format(posts[2].createdAt)}</span>
               </div>
-              <Link to={posts[2].slug} className='text-base sm:text-md md:text-md lg:text-md xl:text-lg font-medium'>
+              <Link to={posts[2].slug} className='text-base text-xs md:text-md lg:text-md xl:text-lg font-medium'>
                 {posts[2].title}
               </Link>
             </div>
@@ -119,13 +119,13 @@ const FeaturedPost = () => {
                 />
               </div>
             )}
-            <div className='w-2/3'>
+            <div className='w-1/2'>
               <div className='flex items-center gap-2 mb-4'>
-                <h1 className='font-semi-bold'>04.</h1>
-                <Link className='text-blue-800 sm:text-sm'>{posts[3].category || 'Uncategorized'}</Link>
-                <span className='text-gray-500 text-md'>{format(posts[3].createdAt)}</span>
+                <h1 className='font-semi-bold text-xs'>04.</h1>
+                <Link className='text-blue-800 text-xs'>{posts[3].category || 'Uncategorized'}</Link>
+                <span className='text-gray-500 text-xs'>{format(posts[3].createdAt)}</span>
               </div>
-              <Link to={posts[3].slug} className='text-base sm:text-md md:text-md lg:text-md xl:text-lg font-medium'>
+              <Link to={posts[3].slug} className='text-base text-xs md:text-md lg:text-md xl:text-lg font-medium'>
                 {posts[3].title}
               </Link>
             </div>

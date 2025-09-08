@@ -15,13 +15,10 @@ const HomePage = () => {
                 {/** Introductions */}
                <div className=" flex items-center justify-between">
                 {/** titles */} 
-                <div className="">
-                <h1 className="text-grey-800 text-2xl md:text-5xl lg:text-6xl font-bold">
-                    Web develpment and AI intergration logic.
+                <div className="w-2/2">
+                <h1 className="text-grey-800 text-lg md:text-5xl lg:text-6xl font-bold">
+                    Catch up with the latest news and stories
                     </h1> 
-                <p className="mt-8 text-sm text-md md:text-xl text-grey-800">
-                    Featured posts
-                    </p>
                 </div>
                
                  {/** animated button */}
@@ -65,7 +62,16 @@ const HomePage = () => {
                     <FeaturedPost />
                      {/** POST list*/}
                      <div className="relative  w-full">
-                         <h1 className="tex-t2xl text-gray-600">Recent Post</h1>
+                        <div className="flex  items-center shadow-md mt-4 w-40">
+                         <h1 className="text-lg text-gray-600 ">Recent Post</h1>
+                     
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                         xmlns="http://www.w3.org/2000/svg"
+                         className="ml-2"
+                         >
+                        <path d="M5 7L10 12L15 7" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        </div>
                          <PostList />
                      </div>
         </div>

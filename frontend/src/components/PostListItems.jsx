@@ -131,7 +131,7 @@ const handleLike = () => {
  
 
   return (
-   <div className="flex flex-col gap-6 mb-8 relative mt-10 w-full md:flex-row py-5 shadow-xl rounded-lg bg-white">
+   <div className="flex flex-col gap-6 mb-8 relative mt-10 w-full md:flex-row py-5 shadow-xl rounded-lg bg-white-400">
   {post.coverImage && (
     <div className="w-full">
       <Image
