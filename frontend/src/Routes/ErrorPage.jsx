@@ -1,6 +1,10 @@
-import { Links } from "react-router-dom";
+import { Link } from "react-router-dom"; // ✅ Fixed import - should be Link, not Links
 
 const ErrorPage = () => {
+  const handleTryAgain = () => {
+    window.location.reload(); // Reload the page
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center px-4">
       <div className="max-w-lg w-full bg-white rounded-2xl shadow-xl overflow-hidden">
@@ -34,36 +38,47 @@ const ErrorPage = () => {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-            <button className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 px-4 rounded-lg transition duration-200 flex items-center justify-center">
+            {/* ✅ Fixed: Added onClick handler */}
+            <button 
+              onClick={handleTryAgain}
+              className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 px-4 rounded-lg transition duration-200 flex items-center justify-center"
+            >
               <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
               </svg>
               Try Again
             </button>
-           <a href="/">
-            <button className="border border-gray-300 hover:bg-gray-50 text-gray-700 font-medium py-3 px-4 rounded-lg transition duration-200 flex items-center justify-center">
-              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-              </svg>
-              Go Home
-            </button>
-            </a>
+            
+            {/* ✅ Fixed: Using Link component properly */}
+            <Link to="/">
+              <button className="w-full border border-gray-300 hover:bg-gray-50 text-gray-700 font-medium py-3 px-4 rounded-lg transition duration-200 flex items-center justify-center">
+                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+                Go Home
+              </button>
+            </Link>
           </div>
           
           <div className="text-center">
             <p className="text-gray-500 text-sm">Need additional help?</p>
-          <a href="mailto:chukstechservice23@gmail.com" className="text-indigo-600 hover:text-indigo-800 font-medium inline-flex items-center mt-1">
-            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-            </svg>
-            Contact Support
+            {/* ✅ Fixed: Proper mailto link */}
+            <a 
+              href="mailto:chukstechservice23@gmail.com" 
+              className="text-indigo-600 hover:text-indigo-800 font-medium inline-flex items-center mt-1"
+            >
+              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
+                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+              Contact Support
             </a>
           </div>
         </div>
         
         <div className="bg-gray-50 py-4 px-8 border-t border-gray-200">
           <p className="text-xs text-gray-500 text-center">
-            Error occurred at {new Date().toLocaleTimeString()} • Request ID: #12345
+            Error occurred at {new Date().toLocaleTimeString()} • Request ID: #{Math.random().toString(36).substr(2, 9).toUpperCase()}
           </p>
         </div>
       </div>
