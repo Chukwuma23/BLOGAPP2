@@ -75,6 +75,13 @@ app.use((error, req, res, next) => {
       stack: process.env.NODE_ENV === 'development' ? error.stack : {}
     });
 });
+// Test webhook endpoint
+app.get('/webhooks/test', (req, res) => {
+  res.json({ 
+    message: "Webhook endpoint is reachable",
+    timestamp: new Date().toISOString()
+  });
+});
 
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", '*'); // Allow all origins
