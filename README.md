@@ -8,7 +8,7 @@ content through an intuitive interface.
 
 
 🚀 Live Demo
-life link: https://chuksblogapp.netlify.app/
+link: https://chuksblogapp.netlify.app/
 
 View Live Demo
 
