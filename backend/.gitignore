@@ -1,5 +1,7 @@
-
+# Ignore environment variable files
 .env.production
 .env
 
-dist
+#dependencies
+node_modules
+package-lock.json
