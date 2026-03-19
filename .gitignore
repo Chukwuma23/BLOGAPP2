@@ -1,0 +1,18 @@
+# Environment files 
+.env 
+.env.local 
+.env.development 
+.env.production 
+.env.test 
+ 
+# Config files 
+config.js 
+config.local.js 
+secrets.js 
+ 
+# Dependencies 
+node_modules/ 
+ 
+# Logs 
+*.log 
+npm-debug.log* 
